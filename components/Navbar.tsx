@@ -1,45 +1,37 @@
 import NavbarItem from "./NavbarItem"
-import { FaChevronDown, FaLastfmSquare } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useCallback, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { FaBell } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import AccountMenu from "./AccountMenu";
-const TOP_OFFSET = 66
+import useCurrentUser from "@/hooks/useCurrentUser";
+
+const TOP_OFFSET = 90
 
 const Navbar = () => {
 
-
-
+    const { data: user } = useCurrentUser()
 
     const [showMobileMenu, setShowMobileMenu] = useState(false)
     const [showAccountMenu, setShowAccountMenu] = useState(false)
     const [showBackground, setShowBackground] = useState(false)
 
-
     useEffect(() => {
         const handleScroll = () => {
-            console.log(window.scrollY)
             if (window.scrollY >= TOP_OFFSET) {
                 setShowBackground(true)
-            }
-            else {
+            } else {
                 setShowBackground(false)
             }
-            console.log(showBackground)
         }
+
         window.addEventListener('scroll', handleScroll)
 
         return () => {
             window.removeEventListener('scroll', handleScroll)
         }
-
     }, [])
-
-
-
-
-
 
     const toggleMobileMenu = useCallback(() => {
         setShowMobileMenu((current) => !current)
@@ -48,7 +40,6 @@ const Navbar = () => {
     const toggleAccountMenu = useCallback(() => {
         setShowAccountMenu((current) => !current)
     }, [])
-
 
     return (
         <nav className="w-full fixed z-40">
@@ -63,54 +54,50 @@ const Navbar = () => {
                 duration-500
                 ${showBackground ? 'bg-zinc-900 bg-opacity-90' : ''}
             `}>
+
                 <img className="h-4 lg:h-7" src="/images/logo.png" alt="logo" />
 
-                <div className="
-                    flex-row
-                    ml-8
-                    gap-7
-                    hidden
-                    lg:flex
-                ">
-                    <NavbarItem label="Home" />
-                    <NavbarItem label="Movies" />
-                    <NavbarItem label="About us" />
-                    <NavbarItem label="Contacts" />
-
+                <div className="flex-row ml-8 gap-7 hidden lg:flex">
+                    <NavbarItem label="Басты бет" href="/" />
+                    <NavbarItem label="Фильмдер" href="/movies" />
+                    <NavbarItem label="Профиль" href="/profiles" />
+                    <NavbarItem label="Біздің команда" href="/teams" />
                 </div>
+
                 <div
                     onClick={toggleMobileMenu}
-                    className="
-                     lg:hidden
-                     flex 
-                     flex-row 
-                     items-center 
-                     gap-2 
-                     ml-8 
-                     cursor-pointer 
-                     relative">
+                    className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative">
                     <p className="text-white text-sm">Browse</p>
-                    <FaChevronDown className={`text-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'} `} />
+                    <FaChevronDown className={`text-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} />
                     <MobileMenu visible={showMobileMenu} />
-
                 </div>
+
                 <div className="flex flex-row ml-auto gap-7 items-center">
+
                     <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
                         <FaSearch />
-
                     </div>
+
                     <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-                        <FaBell />
-
+                        <FaHeart />
                     </div>
+
                     <div
                         onClick={toggleAccountMenu}
                         className="flex flex-row items-center gap-2 cursor-pointer relative">
+
                         <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
-                            <img src="/images/default.png" alt="" />
+                            <img
+                                src={user?.image || "/images/default.png"}
+                                alt="avatar"
+                                className="object-cover w-full h-full"
+                            />
                         </div>
-                        <FaChevronDown className={`text-white transition ${showAccountMenu ? 'rotate-180' : 'rotate-0'} `} />
+
+                        <FaChevronDown className={`text-white transition ${showAccountMenu ? 'rotate-180' : 'rotate-0'}`} />
+
                         <AccountMenu visible={showAccountMenu} />
+
                     </div>
                 </div>
 

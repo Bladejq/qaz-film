@@ -1,17 +1,20 @@
-import React from 'react'
+import Link from "next/link"
+import React from "react"
 
 interface NavbarItemProps {
-    label: string
+  label: string
+  href: string
 }
 
-
-const NavbarItem: React.FC<NavbarItemProps> = ({ label }) => {
-    return (
-        <div className="text-white cursor-pointer hover:text-gray-300 transition">
-            {label}
-        </div>
-
-
-    )
+const NavbarItem: React.FC<NavbarItemProps> = ({ label, href }) => {
+  return (
+    <Link
+      href={href}
+      className="text-white cursor-pointer hover:text-gray-300 transition"
+    >
+      {label}
+    </Link>
+  )
 }
+
 export default NavbarItem

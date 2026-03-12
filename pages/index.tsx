@@ -1,13 +1,8 @@
-import BillBoard from "@/components/BillBoard"
 import Navbar from "@/components/Navbar"
-import useCurrentUser from "@/hooks/useCurrentUser"
+import Footer from "@/components/Footer"
+import { useRouter } from "next/router"
 import { NextPageContext } from "next"
 import { signOut, getSession } from "next-auth/react"
-import MovieList from "@/components/MovieList"
-import useMovieList from "@/hooks/useMovieList"
-import useFavorites from "@/hooks/useFavorites"
-import InfoModal from "@/components/InfoModal"
-import useInfoModalStore from "@/hooks/useInfoModalStore"
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context)
@@ -27,25 +22,35 @@ export async function getServerSideProps(context: NextPageContext) {
 
 }
 
-
-
 export default function Home() {
 
-  const { data: user } = useCurrentUser()
-  const { data: movies } = useMovieList()
-  const { data: favoriteMovies } = useFavorites()
-  const { isOpen, closeModal } = useInfoModalStore()
-  console.log(favoriteMovies)
+  const router = useRouter()
+
   return (
     <>
-      <InfoModal visible={isOpen} onClose={closeModal} />
       <Navbar />
-      <BillBoard />
-      <div className="pb-40">
-        <MovieList data={movies} title="Trending Now" />
-        <MovieList data={favoriteMovies} title="My List" />
-      </div>
-    </>
 
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center text-center px-4">
+
+        <h1 className="text-5xl font-bold mb-6">
+          Добро пожаловать в QazFlix
+        </h1>
+
+        <p className="text-gray-400 max-w-xl mb-8">
+          Смотрите лучшие фильмы и сериалы онлайн. 
+          Добавляйте любимые фильмы в избранное и наслаждайтесь просмотром.
+        </p>
+
+        <button
+          onClick={() => router.push("/movies")}
+          className="bg-red-600 px-6 py-3 rounded-md hover:bg-red-700 transition"
+        >
+          Смотреть фильмы
+        </button>
+
+      </div>
+
+      <Footer />
+    </>
   )
 }

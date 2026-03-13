@@ -118,7 +118,7 @@ const Profiles = () => {
         </h1>
 
         <p className="text-zinc-400 text-center text-sm mb-8">
-          Измените данные аккаунта
+          Профиль деректерін өзгерту. Фото жүктегенде 5МВ аспауы қажет.
         </p>
 
         {message && (
@@ -146,16 +146,16 @@ const Profiles = () => {
 
             {uploading && (
               <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white text-sm">
-                Upload...
+                Жүктелуде...
               </div>
             )}
 
           </div>
 
-          <label className="cursor-pointer bg-zinc-800 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition text-sm flex items-center gap-2">
+          <label className="cursor-pointer bg-zinc-800 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition text-sm flex items-center gap-2">
 
             <FaUpload />
-            Выбрать фото
+            Фотосуретті таңдаңыз
 
             <input
               type="file"
@@ -174,7 +174,7 @@ const Profiles = () => {
               </span>
 
               <input
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Имя"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -187,7 +187,7 @@ const Profiles = () => {
               </span>
 
               <input
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 type="password"
                 placeholder="Новый пароль"
                 value={password}
@@ -198,14 +198,14 @@ const Profiles = () => {
             <button
               onClick={updateProfile}
               disabled={loading}
-              className="bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2"
+              className="bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
             >
               {loading ? "Сохранение..." : "Сохранить"}
               {!loading && <FaCheck />}
             </button>
 
             <p className="text-zinc-500 text-xs text-center">
-              Оставьте пароль пустым если не хотите менять
+              Құпия сөзді өзгерткіңіз келмесе, оны бос қалдырыңыз.
             </p>
 
           </div>

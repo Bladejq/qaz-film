@@ -1,6 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v2 as cloudinary } from "cloudinary";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb"
+    }
+  }
+};
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -13,7 +21,7 @@ export default async function handler(
 ) {
 
   if (req.method !== "POST") {
-    return res.status(405).end();
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -26,7 +34,11 @@ export default async function handler(
 
     const upload = await cloudinary.uploader.upload(image, {
       folder: "qazflix",
-      resource_type: "image"
+      resource_type: "image",
+      transformation: [
+        { width: 500, height: 500, crop: "limit" },
+        { quality: "auto" }
+      ]
     });
 
     return res.status(200).json({
@@ -35,7 +47,7 @@ export default async function handler(
 
   } catch (error) {
 
-    console.log("UPLOAD ERROR:", error);
+    console.error("Cloudinary upload error:", error);
 
     return res.status(500).json({
       error: "Upload failed"

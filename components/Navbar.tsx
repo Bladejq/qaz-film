@@ -2,16 +2,18 @@ import NavbarItem from "./NavbarItem"
 import { FaChevronDown } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useCallback, useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import AccountMenu from "./AccountMenu";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import useMovieList from "@/hooks/useMovieList";
+import Search from "./Search";
 
 const TOP_OFFSET = 90
 
 const Navbar = () => {
 
     const { data: user } = useCurrentUser()
+    const { data: movies } = useMovieList()
 
     const [showMobileMenu, setShowMobileMenu] = useState(false)
     const [showAccountMenu, setShowAccountMenu] = useState(false)
@@ -67,16 +69,14 @@ const Navbar = () => {
                 <div
                     onClick={toggleMobileMenu}
                     className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative">
-                    <p className="text-white text-sm">Browse</p>
+                    <p className="text-white text-sm">Беттер</p>
                     <FaChevronDown className={`text-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} />
                     <MobileMenu visible={showMobileMenu} />
                 </div>
 
                 <div className="flex flex-row ml-auto gap-7 items-center">
 
-                    <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-                        <FaSearch />
-                    </div>
+                    <Search movies={movies || []} />
 
                     <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
                         <FaHeart />

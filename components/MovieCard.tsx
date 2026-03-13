@@ -1,19 +1,23 @@
 import React from 'react'
-import { BsFillPlayFill } from "react-icons/bs";
-import FavoriteButton from './FavoriteButon';
-import { useRouter } from 'next/router';
-import { BiChevronDown } from "react-icons/bi";
-import useInfoModalStore from '@/hooks/useInfoModalStore';
+import { BsFillPlayFill } from "react-icons/bs"
+import FavoriteButton from './FavoriteButon'
+import { useRouter } from 'next/router'
+import { BiChevronDown } from "react-icons/bi"
 
 interface MovieCardProps {
-    data: Record<string, any>;
+    data: Record<string, any>
 }
+
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
+
     const router = useRouter()
-    const { openModal } = useInfoModalStore()
+
     return (
         <div className='group bg-zinc-900 col-span relative h-[12vw]'>
-            <img src={data.thumbnailUrl} alt=""
+
+            <img
+                src={data.thumbnailUrl}
+                alt=""
                 className='
                 cursor-pointer
                 object-cover
@@ -27,6 +31,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                 h-[12vw]
                 '
             />
+
             <div className='
                 opacity-0
                 absolute
@@ -44,7 +49,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                 group-hover:translate-x-[2vw]
                 group-hover:opacity-100
             '>
-                <img src={data.thumbnailUrl} alt=""
+
+                <img
+                    src={data.thumbnailUrl}
+                    alt=""
                     className='
                         cursor-pointer
                         object-cover
@@ -56,6 +64,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                         h-[12vw]
                     '
                 />
+
                 <div className='
                         z-10
                         bg-zinc-800
@@ -65,10 +74,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                         w-full
                         transition
                         shadow-md
-                        rounded-d-md
+                        rounded-b-md
                     '>
+
                     <div className='flex flex-row items-center gap-3'>
-                        <div onClick={() => router.push(`/watch/${data?.id}`)}
+
+                        <div
+                            onClick={() => router.push(`/watch/${data?.id}`)}
                             className='
                                 cursor-pointer
                                 w-6
@@ -81,13 +93,16 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                                 justify-center
                                 items-center
                                 transition
-                                hover:bg-netural-300
+                                hover:bg-neutral-300
                             '
                         >
                             <BsFillPlayFill size={30} />
                         </div>
+
                         <FavoriteButton movieId={data?.id} />
-                        <div onClick={() => openModal(data?.id)}
+
+                        <div
+                            onClick={() => router.push(`/movies/${data?.id}`)}
                             className='
                                 cursor-pointer
                                 ml-auto
@@ -96,7 +111,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                                 h-6
                                 lg:w-10
                                 lg:h-10
-                                border-white
+                                border border-white
                                 rounded-full
                                 flex
                                 justify-center
@@ -106,23 +121,35 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
                             '
                         >
 
-                            <BiChevronDown size={30}
+                            <BiChevronDown
+                                size={30}
                                 className="text-white group-hover/item:text-neutral-300"
                             />
+
                         </div>
+
                     </div>
+
                     <p className='text-green-400 font-semibold mt-4'>
-                        new <span className='text-white'> 2023</span>
+                        new <span className='text-white'>2023</span>
                     </p>
 
                     <div className='flex flex-row mt-4 gap-2 items-center'>
-                        <p className='text-white text-[10px] lg:text-sm'>{data.duration}</p>
+                        <p className='text-white text-[10px] lg:text-sm'>
+                            {data.duration}
+                        </p>
                     </div>
+
                     <div className='flex flex-row mt-4 gap-2 items-center'>
-                        <p className='text-white text-[10px] lg:text-sm'>{data.genre}</p>
+                        <p className='text-white text-[10px] lg:text-sm'>
+                            {data.genre}
+                        </p>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     )
 }

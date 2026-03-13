@@ -4,6 +4,7 @@ import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Auth = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const Auth = () => {
       });
 
       if (result?.ok) {
-        setMessage("Вы успешно вошли");
+        setMessage("Сіз сәтті кірдіңіз");
 
         setTimeout(() => {
           router.push("/");
@@ -45,11 +46,11 @@ const Auth = () => {
       }
 
       if (result?.error) {
-        setError("Неверный email или пароль");
+        setError("Email немесе құпиясөз дұрыс емес");
       }
     } catch (error) {
       console.log(error);
-      setError("Ошибка входа");
+      setError("Кіру кезінде қате пайда болды");
     }
   }, [email, password, router]);
 
@@ -64,11 +65,11 @@ const Auth = () => {
         password
       });
 
-      setMessage("Вы успешно зарегистрировались! Теперь войдите.");
+      setMessage("Сіз сәтті тіркелдіңіз! Енді жүйеге кіріңіз.");
       setVariant("login");
     } catch (error) {
       console.log(error);
-      setError("Ошибка регистрации");
+      setError("Тіркелу кезінде қате пайда болды");
     }
   }, [email, name, password]);
 
@@ -85,7 +86,7 @@ const Auth = () => {
           <div className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full">
 
             <h2 className="text-white text-4xl mb-8 font-semibold text-center">
-              {variant === "login" ? "Логин" : "Регистрация"}
+              {variant === "login" ? "Жүйеге кіру" : "Тіркелу"}
             </h2>
 
             {message && (
@@ -104,7 +105,7 @@ const Auth = () => {
 
               {variant === "register" && (
                 <Input
-                  label="name"
+                  label="Аты"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setName(e.target.value)
                   }
@@ -115,7 +116,7 @@ const Auth = () => {
               )}
 
               <Input
-                label="email"
+                label="Email"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setEmail(e.target.value)
                 }
@@ -125,7 +126,7 @@ const Auth = () => {
               />
 
               <Input
-                label="password"
+                label="Құпиясөз"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setPassword(e.target.value)
                 }
@@ -149,10 +150,10 @@ const Auth = () => {
                 transition
               "
             >
-              {variant === "login" ? "Логин" : "Регистрация"}
+              {variant === "login" ? "Кіру" : "Тіркелу"}
             </button>
 
-            <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+            <div className="flex flex-row items-center gap-4 mt-4 justify-center">
               <div
                 onClick={() => signIn("google", { callbackUrl: "/" })}
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
@@ -161,18 +162,24 @@ const Auth = () => {
               </div>
             </div>
 
-            <p className="text-neutral-500 mt-12 text-center">
+            <p className="text-neutral-500 mt-6 text-center">
               {variant === "login"
-                ? "Бірінші рет?"
-                : "Аккаунт бар ма?"}
+                ? "Бірінші рет келдіңіз бе?"
+                : "Аккаунтыңыз бар ма?"}
               <span
                 onClick={toggleVariant}
                 className="text-white ml-1 hover:underline cursor-pointer"
               >
                 {variant === "login"
-                  ? "Аккаунт ашу"
-                  : "Логин"}
+                  ? "Тіркелу"
+                  : "Кіру"}
               </span>
+            </p>
+
+            <p className="text-white mt-2 text-center hover:underline">
+            <Link href="/privacy">
+              Құпиялық саясатпен танысу
+            </Link>
             </p>
 
           </div>

@@ -15,7 +15,7 @@ export default function FavoritesPage() {
           Менің таңдаулыларым
         </h1>
 
-        <MovieList data={favoriteMovies} title="Favorites" />
+        <MovieList data={favoriteMovies} title="" />
 
       </div>
 

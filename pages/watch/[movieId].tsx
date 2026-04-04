@@ -23,12 +23,12 @@ const Watch = () => {
                 bg-opacity-70
             '>
                 <AiOutlineArrowLeft
-                    onClick={() => router.push('/')}
+                    onClick={() => router.push(`/movies/${data?.id}`)}
                     className="text-white cursor-pointer"
                     size={30}
                 />
                 <p className='text-white text-1xl md:text-3xl font-bold'>
-                    <span className='font-light'>Watching: </span>
+                    <span className='font-light'>Көру: </span>
                     {data?.title}
                 </p>
             </nav>

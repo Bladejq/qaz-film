@@ -69,7 +69,7 @@ const Search: React.FC<SearchProps> = ({ movies }) => {
 
             <div
               key={movie.id}
-              onClick={() => router.push(`/watch/${movie.id}`)}
+              onClick={() => router.push(`/movies/${movie.id}`)}
               className="flex items-center gap-3 p-3 hover:bg-zinc-800 cursor-pointer transition"
             >
 

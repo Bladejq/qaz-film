@@ -20,13 +20,6 @@ const Footer = () => {
 
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
 
-        <div className="flex gap-6 text-xl">
-          <FaGithub className="cursor-pointer hover:text-white transition" />
-          <FaTelegram className="cursor-pointer hover:text-white transition" />
-          <FaInstagram className="cursor-pointer hover:text-white transition" />
-          <FaYoutube className="cursor-pointer hover:text-white transition" />
-        </div>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 
           {links.map((link) => (

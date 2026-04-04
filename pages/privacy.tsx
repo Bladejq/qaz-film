@@ -1,6 +1,6 @@
 export default function PrivacyPolicyPage() {
   return (
-    <div className="bg-gray-500 min-h-screen pt-28 relative z-10">
+    <div className="bg-white min-h-screen pt-28 relative z-10">
       <main className="max-w-4xl mx-auto px-6 py-10 text-black">
 
         <h1 className="text-3xl font-bold mb-4">Құпиялылық саясаты</h1>
@@ -32,8 +32,8 @@ export default function PrivacyPolicyPage() {
 
         <ul className="list-disc ml-6 space-y-2 mb-8">
           <li><strong>Аккаунт</strong> – қызметке қол жеткізу үшін жасалған пайдаланушы тіркелгісі.</li>
-          <li><strong>Қосымша</strong> – QazFlix веб платформасы.</li>
-          <li><strong>Компания</strong> – QazFlix.</li>
+          <li><strong>Қосымша</strong> - QazFilm веб платформасы.</li>
+          <li><strong>Компания</strong> – QazFilm.</li>
           <li><strong>Cookie файлдары</strong> – сайт арқылы құрылғыңызға сақталатын файлдар.</li>
           <li><strong>Құрылғы</strong> – компьютер, телефон немесе планшет.</li>
           <li><strong>Жеке деректер</strong> – пайдаланушыны анықтайтын ақпарат.</li>

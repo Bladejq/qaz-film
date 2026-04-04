@@ -1,4 +1,4 @@
-import NavbarItem from "./NavbarItem"
+import NavbarItem from "./NavbarItem";
 import { FaChevronDown } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useCallback, useEffect, useState } from "react";
@@ -7,45 +7,47 @@ import AccountMenu from "./AccountMenu";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useMovieList from "@/hooks/useMovieList";
 import Search from "./Search";
+import { useRouter } from "next/router"
 
-const TOP_OFFSET = 90
+const TOP_OFFSET = 90;
 
 const Navbar = () => {
+    const router = useRouter()
+  const { data: user } = useCurrentUser();
+  const { data: movies } = useMovieList();
 
-    const { data: user } = useCurrentUser()
-    const { data: movies } = useMovieList()
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [showBackground, setShowBackground] = useState(false);
 
-    const [showMobileMenu, setShowMobileMenu] = useState(false)
-    const [showAccountMenu, setShowAccountMenu] = useState(false)
-    const [showBackground, setShowBackground] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= TOP_OFFSET) {
+        setShowBackground(true);
+      } else {
+        setShowBackground(false);
+      }
+    };
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY >= TOP_OFFSET) {
-                setShowBackground(true)
-            } else {
-                setShowBackground(false)
-            }
-        }
+    window.addEventListener("scroll", handleScroll);
 
-        window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [])
+  const toggleMobileMenu = useCallback(() => {
+    setShowMobileMenu((current) => !current);
+  }, []);
 
-    const toggleMobileMenu = useCallback(() => {
-        setShowMobileMenu((current) => !current)
-    }, [])
+  const toggleAccountMenu = useCallback(() => {
+    setShowAccountMenu((current) => !current);
+  }, []);
 
-    const toggleAccountMenu = useCallback(() => {
-        setShowAccountMenu((current) => !current)
-    }, [])
-
-    return (
-        <nav className="w-full fixed z-40">
-            <div className={`
+  return (
+    <nav className="w-full fixed z-40">
+      <div
+        className={`
                 px-4
                 md:px-16
                 py-6
@@ -54,56 +56,61 @@ const Navbar = () => {
                 items-center
                 transition
                 duration-500
-                ${showBackground ? 'bg-zinc-900 bg-opacity-90' : ''}
-            `}>
+                ${showBackground ? "bg-zinc-900 bg-opacity-90" : ""}
+            `}
+      >
+        <img className="h-4 lg:h-7" src="/images/logo.png" alt="logo" />
 
-                <img className="h-4 lg:h-7" src="/images/logo.png" alt="logo" />
+        <div className="flex-row ml-8 gap-7 hidden lg:flex">
+          <NavbarItem label="Басты бет" href="/" />
+          <NavbarItem label="Фильмдер" href="/movies" />
+          <NavbarItem label="Профиль" href="/profiles" />
+          <NavbarItem label="Біздің команда" href="/teams" />
+        </div>
 
-                <div className="flex-row ml-8 gap-7 hidden lg:flex">
-                    <NavbarItem label="Басты бет" href="/" />
-                    <NavbarItem label="Фильмдер" href="/movies" />
-                    <NavbarItem label="Профиль" href="/profiles" />
-                    <NavbarItem label="Біздің команда" href="/teams" />
-                </div>
+        <div
+          onClick={toggleMobileMenu}
+          className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative"
+        >
+          <p className="text-white text-sm">Беттер</p>
+          <FaChevronDown
+            className={`text-white transition ${showMobileMenu ? "rotate-180" : "rotate-0"}`}
+          />
+          <MobileMenu visible={showMobileMenu} />
+        </div>
 
-                <div
-                    onClick={toggleMobileMenu}
-                    className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative">
-                    <p className="text-white text-sm">Беттер</p>
-                    <FaChevronDown className={`text-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} />
-                    <MobileMenu visible={showMobileMenu} />
-                </div>
+        <div className="flex flex-row ml-auto gap-7 items-center">
+          <Search movies={movies || []} />
 
-                <div className="flex flex-row ml-auto gap-7 items-center">
+          <div
+            onClick={() => router.push("/favorites")}
+            className="text-gray-200 hover:text-gray-300 cursor-pointer transition"
+          >
+            <FaHeart />
+          </div>
 
-                    <Search movies={movies || []} />
-
-                    <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-                        <FaHeart />
-                    </div>
-
-                    <div
-                        onClick={toggleAccountMenu}
-                        className="flex flex-row items-center gap-2 cursor-pointer relative">
-
-                        <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
-                            <img
-                                src={user?.image || "/images/default.png"}
-                                alt="avatar"
-                                className="object-cover w-full h-full"
-                            />
-                        </div>
-
-                        <FaChevronDown className={`text-white transition ${showAccountMenu ? 'rotate-180' : 'rotate-0'}`} />
-
-                        <AccountMenu visible={showAccountMenu} />
-
-                    </div>
-                </div>
-
+          <div
+            onClick={toggleAccountMenu}
+            className="flex flex-row items-center gap-2 cursor-pointer relative"
+          >
+            <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
+              <img
+                src={user?.image || "/images/default.png"}
+                alt="avatar"
+                className="object-cover w-full h-full"
+              />
             </div>
-        </nav>
-    )
-}
 
-export default Navbar
+            <FaChevronDown
+              className={`text-white transition ${showAccountMenu ? "rotate-180" : "rotate-0"}`}
+            />
+
+            <AccountMenu visible={showAccountMenu} />
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

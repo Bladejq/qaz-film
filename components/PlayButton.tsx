@@ -16,22 +16,23 @@ const PlayButton: React.FC<PlayButtonProps> = ({ movieId }) => {
         <div
             onClick={() => router.push(`/watch/${movieId}`)}
             className='
-                bg-white
-                text-black
-                rounded-md
-                py-1 md:py-2
-                px-2 md:px-4
-                w-auto
-                text-xs lg:text-lg
-                font-semibold
-                flex
-                flex-row
-                items-center
-                hover:bg-neutral-300
-                transition
+              flex
+              items-center
+              gap-2
+              bg-white/15
+              backdrop-blur-sm
+              text-white
+              rounded-lg
+              py-1.5 md:py-2
+              px-4 md:px-6
+              text-xs md:text-sm
+              font-medium
+              hover:bg-white/25
+              transition
+              border border-white/10
             '>
-            <BsFillPlayFill size={25} className="mr-1" />
-            Play
+            <BsFillPlayFill size={18} className="mr-1" />
+            Қарау
         </div>)
 }
 

@@ -1,7 +1,11 @@
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import BillBoard from "@/components/BillBoard"
+import InfoModal from "@/components/InfoModal"
+import MovieList from "@/components/MovieList"
 import useMovie from "@/hooks/useMovie"
+import useMovieList from "@/hooks/useMovieList"
+import useInfoModalStore from "@/hooks/useInfoModalStore"
 import { useRouter } from "next/router"
 
 const MoviePage = () => {
@@ -10,14 +14,20 @@ const MoviePage = () => {
   const { movieId } = router.query
 
   const { data: movie } = useMovie(movieId as string)
+  const { data: movies = [] } = useMovieList()
+  const { isOpen, closeModal } = useInfoModalStore()
 
   if (!movie) {
     return null
   }
 
+  const filteredMovies = movies.filter((m: any) => m.id !== movie.id)
+
   return (
     <>
       <Navbar />
+
+      <InfoModal visible={isOpen} onClose={closeModal} />
 
       <div className="bg-black text-white min-h-screen">
 
@@ -30,62 +40,55 @@ const MoviePage = () => {
           md:px-16
           py-14
           grid
-          md:grid-cols-2
+          md:grid-cols-1
           gap-12
           items-start
         ">
 
-          <div className="
-            bg-zinc-900
-            border
-            border-zinc-800
-            rounded-xl
-            p-6
-          ">
+<div className="
+  bg-white/5
+  backdrop-blur-xl
+  border border-white/10
+  rounded-2xl
+  p-6
+  shadow-[0_8px_32px_rgba(0,0,0,0.4)]
+">
 
-            <h2 className="text-xl font-semibold mb-4">
-              Фильм туралы
-            </h2>
+  <h2 className="text-xl font-semibold mb-6 text-white">
+    Ақпарат
+  </h2>
 
-            <p className="text-gray-300 leading-relaxed">
-              {movie.description}
-            </p>
+  <div className="space-y-3 text-gray-200 text-sm md:text-base">
 
-          </div>
+    <p className="flex justify-between items-center">
+      <span className="text-gray-400">Жанр</span>
+      <span className="font-medium text-white">
+        {movie.genre}
+      </span>
+    </p>
 
-          <div className="
-            bg-zinc-900
-            border
-            border-zinc-800
-            rounded-xl
-            p-6
-          ">
+    <p className="flex justify-between items-center">
+      <span className="text-gray-400">Ұзақтығы</span>
+      <span className="font-medium text-white">
+        {movie.duration}
+      </span>
+    </p>
 
-            <h2 className="text-xl font-semibold mb-6">
-              Ақпарат
-            </h2>
+    <p className="flex justify-between items-center">
+      <span className="text-gray-400">Жылы</span>
+      <span className="font-medium text-white">
+        {movie.year || movie.title?.match(/\((\d{4})\)/)?.[1] || "Белгісіз"}
+      </span>
+    </p>
 
-            <div className="space-y-3 text-gray-300">
+  </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Жанр</span>
-                <span>{movie.genre}</span>
-              </div>
+</div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Ұзақтығы</span>
-                <span>{movie.duration}</span>
-              </div>
+        </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Жыл</span>
-                <span>2023</span>
-              </div>
-
-            </div>
-
-          </div>
-
+        <div className="px-6 md:px-16 pb-10">
+          <MovieList title="Барлық фильмдер" data={filteredMovies} />
         </div>
 
       </div>

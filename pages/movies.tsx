@@ -1,5 +1,4 @@
 import BillBoard from "@/components/BillBoard"
-import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import MovieList from "@/components/MovieList"
 import useMovieList from "@/hooks/useMovieList"
@@ -19,13 +18,11 @@ export default function Home() {
     <>
       <InfoModal visible={isOpen} onClose={closeModal} />
 
-      <Navbar />
-
       <BillBoard />
 
       <div className="pb-40">
-        <MovieList data={movies} title="Trending Now" />
-        <MovieList data={favoriteMovies} title="My List" />
+        <MovieList data={movies} title="Барлық фильмдер" />
+        <MovieList data={favoriteMovies} title="Менің фильмдерім" />
       </div>
 
       <Footer />

@@ -1,10 +1,29 @@
-import useCurrentUser from "@/hooks/useCurrentUser";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { FaUser, FaLock, FaCheck, FaUpload } from "react-icons/fa";
+import { NextPageContext } from "next";
+import { getSession } from "next-auth/react";
+import { FaUpload, FaUser, FaLock, FaCheck } from "react-icons/fa";
+import useCurrentUser from "@/hooks/useCurrentUser";
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 const Profiles = () => {
-  const { data: user, mutate } = useCurrentUser();
+  const { data: user, mutate: mutateUser } = useCurrentUser();
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
@@ -18,43 +37,34 @@ const Profiles = () => {
 
   useEffect(() => {
     if (user) {
-      setName(user.name);
+      setName(user.name || "");
       setImage(user.image || "");
     }
   }, [user]);
 
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       setMessageType("error");
-      setMessage("Выберите изображение");
-      setTimeout(() => setMessage(""), 3000);
+      setMessage("Суретті таңдаңыз");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       setMessageType("error");
-      setMessage("Файл не должен быть больше 5MB");
-      setTimeout(() => setMessage(""), 3000);
+      setMessage("Файл көлемі 5MB-тан аспауы керек");
       return;
     }
 
     try {
       setUploading(true);
-
       const reader = new FileReader();
 
       reader.onloadend = async () => {
         const base64 = reader.result;
-
-        const response = await axios.post("/api/upload", {
-          image: base64,
-        });
-
+        const response = await axios.post("/api/upload", { image: base64 });
         setImage(response.data.url);
         setUploading(false);
       };
@@ -63,14 +73,14 @@ const Profiles = () => {
     } catch (error) {
       setUploading(false);
       setMessageType("error");
-      setMessage("Ошибка загрузки изображения");
+      setMessage("Суретті жүктеу кезінде қате шықты");
     }
   };
 
   const updateProfile = async () => {
     if (!name.trim()) {
       setMessageType("error");
-      setMessage("Имя не может быть пустым");
+      setMessage("Аты бос болмауы керек");
       return;
     }
 
@@ -84,23 +94,16 @@ const Profiles = () => {
         password: password || undefined,
       });
 
-      await mutate();
+      await mutateUser();
 
       setMessageType("success");
-      setMessage("Профиль обновлен");
-
+      setMessage("Профиль жаңартылды");
       setPassword("");
 
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setMessageType("error");
-      setMessage("Ошибка обновления");
-
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
+      setMessage("Жаңарту кезінде қате шықты");
     } finally {
       setLoading(false);
     }
@@ -110,34 +113,29 @@ const Profiles = () => {
 
   return (
     <div className="h-screen pt-24 bg-gradient-to-br from-zinc-900 via-black to-zinc-900 flex items-center justify-center px-4 overflow-hidden">
-
       <div className="bg-zinc-900/90 backdrop-blur-sm w-full max-w-md rounded-2xl p-6 sm:p-8 shadow-2xl border border-zinc-800/50">
-
         <h1 className="text-white text-3xl font-bold text-center mb-2">
           Профиль
         </h1>
 
         <p className="text-zinc-400 text-center text-sm mb-8">
-          Профиль деректерін өзгерту. Фото жүктегенде 5МВ аспауы қажет.
+          Профиль деректерін өзгертіңіз. Фото көлемі 5MB-тан аспауы керек.
         </p>
 
         {message && (
           <div
-            className={`text-center mb-6 p-3 rounded-lg text-sm font-medium
-              ${
-                messageType === "success"
-                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                  : "bg-red-500/20 text-red-400 border border-red-500/30"
-              }`}
+            className={`text-center mb-6 p-3 rounded-lg text-sm font-medium border ${
+              messageType === "success"
+                ? "bg-green-500/20 text-green-400 border-green-500/30"
+                : "bg-red-500/20 text-red-400 border-red-500/30"
+            }`}
           >
             {message}
           </div>
         )}
 
         <div className="flex flex-col items-center gap-6">
-
           <div className="relative group">
-
             <img
               src={image || "/images/default.png"}
               alt="avatar"
@@ -145,37 +143,31 @@ const Profiles = () => {
             />
 
             {uploading && (
-              <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white text-sm">
+              <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white text-xs">
                 Жүктелуде...
               </div>
             )}
-
           </div>
 
           <label className="cursor-pointer bg-zinc-800 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition text-sm flex items-center gap-2">
-
             <FaUpload />
-            Фотосуретті таңдаңыз
-
+            Фотосуретті таңдау
             <input
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
               className="hidden"
             />
-
           </label>
 
           <div className="w-full flex flex-col gap-4">
-
             <div className="relative">
               <span className="absolute left-3 top-3 text-zinc-500">
                 <FaUser />
               </span>
-
               <input
                 className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Имя"
+                placeholder="Атыңыз"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -185,11 +177,10 @@ const Profiles = () => {
               <span className="absolute left-3 top-3 text-zinc-500">
                 <FaLock />
               </span>
-
               <input
                 className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 type="password"
-                placeholder="Новый пароль"
+                placeholder="Жаңа құпия сөз"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -197,17 +188,16 @@ const Profiles = () => {
 
             <button
               onClick={updateProfile}
-              disabled={loading}
-              className="bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
+              disabled={loading || uploading}
+              className="bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 disabled:bg-zinc-700 transition flex items-center justify-center gap-2"
             >
-              {loading ? "Сохранение..." : "Сохранить"}
+              {loading ? "Сақталуда..." : "Сақтау"}
               {!loading && <FaCheck />}
             </button>
 
             <p className="text-zinc-500 text-xs text-center">
-              Құпия сөзді өзгерткіңіз келмесе, оны бос қалдырыңыз.
+              Егер құпия сөзді өзгерткіңіз келмесе, бос қалдырыңыз.
             </p>
-
           </div>
         </div>
       </div>

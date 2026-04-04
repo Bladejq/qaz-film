@@ -1,39 +1,46 @@
 import useInfoModalStore from "@/hooks/useInfoModalStore";
-import useInfoModal from "@/hooks/useInfoModalStore";
 import useMovie from "@/hooks/useMovie";
 import { useCallback, useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import PlayButton from "./PlayButton";
-import FavoriteButton from "./FavoriteButon";
+import FavoriteButton from "./FavoriteButton";
 
 interface InfoModalProps {
-    visible?: boolean
-    onClose: any;
+  visible?: boolean;
+  onClose: any;
 }
 
 const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
-    const [isVisible, setIsVisible] = useState(!!visible)
+  const [isVisible, setIsVisible] = useState(!!visible);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-    const { movieId } = useInfoModalStore()
-    const { data = {} } = useMovie(movieId)
-    useEffect(() => {
-        setIsVisible(!!visible)
-    }, [visible])
+  const { movieId } = useInfoModalStore();
+  const { data = {} } = useMovie(movieId);
 
+  useEffect(() => {
+    setIsVisible(!!visible);
+  }, [visible]);
 
-    const handleClose = useCallback(() => {
-        setIsVisible(false)
-        setTimeout(() => {
-            onClose()
-        }, 300)
-    }, [onClose])
+  const handleClose = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  }, [onClose]);
 
-    if (!visible) {
-        return null
-    }
+  const toggleReadMore = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
-    return (
-        <div className="
+  if (!visible) {
+    return null;
+  }
+
+  const shortText = data?.description?.slice(0, 150);
+
+  return (
+    <div
+      className="
             z-50
             transition
             duration-300
@@ -46,43 +53,46 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
             overflow-y-auto
             fixed
             inset-0    
-        ">
-            <div className="
+        "
+    >
+      <div
+        className="
                 relative
                 w-auto
                 mx-auto
                 max-w-3xl
                 rounded-md
                 overflow-hidden
-            "   >
-                <div className={`
-                ${isVisible ? 'scale-100' : 'scale-0'}
+            "
+      >
+        <div
+          className={`
+                ${isVisible ? "scale-100" : "scale-0"}
                 transform
                 duration-300
                 relative
                 flex-auto
                 bg-zinc-900
                 drop-shadow-md
-                `
-                }>
-                    <div className="relative h-96">
-                        <video
-                            className="
+                `}
+        >
+          <div className="relative h-96">
+            <video
+              className="
                                    w-full
                                    brightness-[60%]
                                    object-cover
                                    h-full
                         "
-                            autoPlay
-                            muted
-                            loop
-                            poster={data?.thumbnail}
-                            src={data?.videoUrl}>
-
-                        </video>
-                        <div
-                            onClick={handleClose}
-                            className="
+              autoPlay
+              muted
+              loop
+              poster={data?.thumbnail}
+              src={data?.videoUrl}
+            ></video>
+            <div
+              onClick={handleClose}
+              className="
                                 cursor-pointer
                                 absolute
                                 top-3
@@ -96,15 +106,19 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
                                 items-center
                                 justify-center
 
-                        ">
-                            <AiOutlineClose className="text-white" size={20} />
-                        </div>
-                        <div className="
+                        "
+            >
+              <AiOutlineClose className="text-white" size={20} />
+            </div>
+            <div
+              className="
                             absolute
                             bottom-[10%]
                             left-10
-                        ">
-                            <p className="
+                        "
+            >
+              <p
+                className="
                                 text-white
                                 text-3xl
                                 md:text-4xl
@@ -112,25 +126,37 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
                                 lg:text-5xl
                                 font-bold
                                 mb-8
-                            ">{data?.title}</p>
-                            <div className="flex flex-row gap-4 items-center">
-                                <PlayButton movieId={data?.id} />
-                                <FavoriteButton movieId={data?.id} />
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div className="px-12 py-8">
-                        <p className="text-green-400 font-semibold text-lg"> New</p>
-                        <p className="text-white text-lg">{data?.duration}</p>
-                        <p className="text-white text-lg">{data?.genre}</p>
-                        <p className="text-white text-lg">{data?.description}</p>
-                        <p className="text-white text-lg">{data?.year}</p>
-                    </div>
-                </div>
+                            "
+              >
+                {data?.title}
+              </p>
+              <div className="flex flex-row gap-4 items-center">
+                <PlayButton movieId={data?.id} />
+                <FavoriteButton movieId={data?.id} />
+              </div>
             </div>
-        </div>)
-}
+          </div>
+          <div className="px-12 py-8">
+            <div className="space-y-2 text-gray-300 text-sm md:text-base">
+              <p>
+                <span className="text-gray-500">Жанр:</span> {data?.genre}
+              </p>
 
-export default InfoModal
+              <p>
+                <span className="text-gray-500">Ұзақтығы:</span>{" "}
+                {data?.duration}
+              </p>
+
+
+              <p>
+                <span className="text-gray-500">Жылы:</span> {data?.year}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InfoModal;

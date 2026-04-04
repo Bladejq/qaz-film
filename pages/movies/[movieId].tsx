@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import BillBoard from "@/components/BillBoard"
 import InfoModal from "@/components/InfoModal"
@@ -25,7 +24,6 @@ const MoviePage = () => {
 
   return (
     <>
-      <Navbar />
 
       <InfoModal visible={isOpen} onClose={closeModal} />
 
